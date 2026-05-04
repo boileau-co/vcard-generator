@@ -1,0 +1,14 @@
+{
+    "name": "bco/vcard",
+    "description": "BCO vCard WordPress plugin — employee contact records as downloadable .vcf files",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.1",
+        "chillerlan/php-qrcode": "^5.0"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}
