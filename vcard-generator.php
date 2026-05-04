@@ -4,7 +4,7 @@
  * Plugin URI:  https://github.com/boileau-co/vcard-generator
  * GitHub Plugin URI: boileau-co/vcard-generator
  * Description: Manage employee contact records and serve them as downloadable .vcf files, with QR code generation and scan tracking.
- * Version:     1.0.3
+ * Version:     1.0.5
  * Author:      Boileau & Co.
  * Author URI:  https://boileau.co/
  * License:     GPL-2.0-or-later
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'VCARD_GENERATOR_VERSION', '1.0.3' );
+define( 'VCARD_GENERATOR_VERSION', '1.0.5' );
 define( 'VCARD_GENERATOR_FILE', __FILE__ );
 define( 'VCARD_GENERATOR_DIR', plugin_dir_path( __FILE__ ) );
 define( 'VCARD_GENERATOR_URL', plugin_dir_url( __FILE__ ) );

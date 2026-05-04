@@ -59,9 +59,10 @@ class Rewrite {
 
 		header( 'Content-Type: text/vcard; charset=utf-8' );
 		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Cache-Control: no-cache, no-store, must-revalidate' );
+		header( 'Cache-Control: no-store, no-cache, must-revalidate, max-age=0, private' );
 		header( 'Pragma: no-cache' );
 		header( 'Expires: 0' );
+		header( 'X-Accel-Expires: 0' );
 
 		if ( ! $is_head ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

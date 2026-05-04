@@ -10,9 +10,13 @@ class PostType {
 
 	const SLUG = 'vcard_generator';
 
+	/** Slug auto-derived from the names as they were *before* the current save. */
+	private static string $prev_derived_slug = '';
+
 	public static function register(): void {
 		add_action( 'init', [ self::class, 'register_cpt' ] );
 		add_action( 'admin_menu', [ self::class, 'add_top_level_menu' ] );
+		add_action( 'pre_post_update', [ self::class, 'capture_prev_slug' ] );
 		add_action( 'save_post_' . self::SLUG, [ self::class, 'sync_title' ], 10, 2 );
 	}
 
@@ -62,7 +66,22 @@ class PostType {
 	}
 
 	/**
-	 * Auto-populate post title from first + last name meta on save.
+	 * Snapshot the auto-derived slug from existing meta before WP/Fields writes new values.
+	 * Fires on pre_post_update, so meta still holds the previous first/last name.
+	 */
+	public static function capture_prev_slug( int $post_id ): void {
+		if ( get_post_type( $post_id ) !== self::SLUG ) {
+			return;
+		}
+		$first = trim( (string) get_post_meta( $post_id, '_vcard_generator_first_name', true ) );
+		$last  = trim( (string) get_post_meta( $post_id, '_vcard_generator_last_name', true ) );
+		self::$prev_derived_slug = sanitize_title( trim( "$first $last" ) );
+	}
+
+	/**
+	 * Auto-populate post title and conditionally update the slug on save.
+	 * The slug is only auto-updated when it is empty (first save) or still
+	 * matches the previously-auto-derived value. A manually-set slug is preserved.
 	 */
 	public static function sync_title( int $post_id, \WP_Post $post ): void {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -72,6 +91,7 @@ class PostType {
 			return;
 		}
 
+		// Fields::save (priority 5) has already written the new names to meta.
 		$first = trim( (string) get_post_meta( $post_id, '_vcard_generator_first_name', true ) );
 		$last  = trim( (string) get_post_meta( $post_id, '_vcard_generator_last_name', true ) );
 
@@ -79,7 +99,17 @@ class PostType {
 			return;
 		}
 
-		$full_name = trim( "$first $last" );
+		$full_name    = trim( "$first $last" );
+		$derived_slug = sanitize_title( $full_name );
+
+		// The slug explicitly submitted with this request.
+		$submitted_slug = sanitize_title( wp_unslash( $_POST['post_name'] ?? '' ) );
+
+		// Auto-update only when the slug is empty (first save) or the user hasn't
+		// deviated from the previously-auto-derived value.
+		$new_slug = ( '' === $submitted_slug || $submitted_slug === self::$prev_derived_slug )
+			? $derived_slug
+			: $submitted_slug;
 
 		// Avoid infinite loop by unhooking before updating.
 		remove_action( 'save_post_' . self::SLUG, [ self::class, 'sync_title' ], 10 );
@@ -87,7 +117,7 @@ class PostType {
 		wp_update_post( [
 			'ID'         => $post_id,
 			'post_title' => $full_name,
-			'post_name'  => sanitize_title( $full_name ),
+			'post_name'  => $new_slug,
 		] );
 
 		add_action( 'save_post_' . self::SLUG, [ self::class, 'sync_title' ], 10, 2 );
