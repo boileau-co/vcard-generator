@@ -44,6 +44,18 @@ if ( file_exists( VCARD_GENERATOR_DIR . 'vendor/autoload.php' ) ) {
 	require_once VCARD_GENERATOR_DIR . 'vendor/autoload.php';
 }
 
+// Plugin Update Checker – self-update from GitHub.
+require VCARD_GENERATOR_DIR . 'lib/plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$vcard_generator_update_checker = PucFactory::buildUpdateChecker(
+	'https://github.com/boileau-co/vcard-generator/',
+	__FILE__,
+	'vcard-generator'
+);
+// $vcard_generator_update_checker->setAuthentication( 'your-token-here' );
+$vcard_generator_update_checker->setBranch( 'main' );
+
 register_activation_hook( __FILE__, [ Plugin::class, 'activate' ] );
 register_deactivation_hook( __FILE__, [ Plugin::class, 'deactivate' ] );
 
