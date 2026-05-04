@@ -23,6 +23,7 @@ class QrGenerator {
 
 		$options = new QROptions( [
 			'outputType'   => QROutputInterface::MARKUP_SVG,
+			'outputBase64' => false,
 			'eccLevel'     => self::ecc_constant( $ecc_level ?? (string) get_option( 'vcard_generator_ecc_level', 'M' ) ),
 			'quietZone'    => 4,
 			'addQuietzone' => true,
