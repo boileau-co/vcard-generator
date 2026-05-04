@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -36,7 +36,7 @@ class VCardFormatter {
 		$lines[] = 'FN:' . call_user_func( $e, $full_name );
 
 		// ORG
-		$org_name   = (string) get_option( 'bco_vcard_org_name', '' );
+		$org_name   = (string) get_option( 'vcard_generator_org_name', '' );
 		$department = $fields['department'];
 		if ( '' !== $org_name ) {
 			if ( '' !== $department ) {
@@ -59,7 +59,7 @@ class VCardFormatter {
 		// Work phone (falls back to org main phone if empty)
 		$work_phone = $fields['work_phone'];
 		if ( '' === $work_phone ) {
-			$org_phone = (string) get_option( 'bco_vcard_org_phone', '' );
+			$org_phone  = (string) get_option( 'vcard_generator_org_phone', '' );
 			$work_phone = PhoneNormalizer::normalize( $org_phone );
 		}
 		if ( '' !== $work_phone ) {
@@ -72,7 +72,7 @@ class VCardFormatter {
 		}
 
 		// Organization URL
-		$org_url = (string) get_option( 'bco_vcard_org_website', '' );
+		$org_url = (string) get_option( 'vcard_generator_org_website', '' );
 		if ( '' !== $org_url ) {
 			$lines[] = 'URL:' . call_user_func( $e, $org_url );
 		}
@@ -88,11 +88,11 @@ class VCardFormatter {
 		}
 
 		// ADR: post office box;extended address;street;city;state;postal;country
-		$street  = (string) get_option( 'bco_vcard_address_street', '' );
-		$city    = (string) get_option( 'bco_vcard_address_city', '' );
-		$state   = (string) get_option( 'bco_vcard_address_state', '' );
-		$zip     = (string) get_option( 'bco_vcard_address_zip', '' );
-		$country = (string) get_option( 'bco_vcard_address_country', '' );
+		$street  = (string) get_option( 'vcard_generator_address_street', '' );
+		$city    = (string) get_option( 'vcard_generator_address_city', '' );
+		$state   = (string) get_option( 'vcard_generator_address_state', '' );
+		$zip     = (string) get_option( 'vcard_generator_address_zip', '' );
+		$country = (string) get_option( 'vcard_generator_address_country', '' );
 
 		if ( $street || $city || $state || $zip || $country ) {
 			$lines[] = 'ADR;TYPE=WORK:;;'
@@ -118,8 +118,8 @@ class VCardFormatter {
 	 * Return the .vcf filename for a post (firstname-lastname.vcf).
 	 */
 	public static function filename( \WP_Post $post ): string {
-		$first = (string) get_post_meta( $post->ID, '_bco_vcard_first_name', true );
-		$last  = (string) get_post_meta( $post->ID, '_bco_vcard_last_name', true );
+		$first = (string) get_post_meta( $post->ID, '_vcard_generator_first_name', true );
+		$last  = (string) get_post_meta( $post->ID, '_vcard_generator_last_name', true );
 		return sanitize_file_name( strtolower( trim( "$first-$last" ) ) ) . '.vcf';
 	}
 }

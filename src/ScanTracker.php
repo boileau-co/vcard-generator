@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ class ScanTracker {
 	 *  - the request is not from a known bot.
 	 */
 	public static function record( int $post_id ): void {
-		if ( ! (bool) get_option( 'bco_vcard_scan_tracking', true ) ) {
+		if ( ! (bool) get_option( 'vcard_generator_scan_tracking', true ) ) {
 			return;
 		}
 
@@ -26,9 +26,9 @@ class ScanTracker {
 			return;
 		}
 
-		$count = (int) get_post_meta( $post_id, '_bco_vcard_scan_count', true );
-		update_post_meta( $post_id, '_bco_vcard_scan_count', $count + 1 );
-		update_post_meta( $post_id, '_bco_vcard_last_scanned', current_time( 'mysql', true ) );
+		$count = (int) get_post_meta( $post_id, '_vcard_generator_scan_count', true );
+		update_post_meta( $post_id, '_vcard_generator_scan_count', $count + 1 );
+		update_post_meta( $post_id, '_vcard_generator_last_scanned', current_time( 'mysql', true ) );
 	}
 
 	/**
@@ -40,7 +40,7 @@ class ScanTracker {
 			return false;
 		}
 
-		$bots = apply_filters( 'bco_vcard_bot_user_agents', self::default_bot_list() );
+		$bots = apply_filters( 'vcard_generator_bot_user_agents', self::default_bot_list() );
 
 		foreach ( $bots as $bot ) {
 			if ( str_contains( $ua, strtolower( (string) $bot ) ) ) {

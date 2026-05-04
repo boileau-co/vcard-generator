@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
@@ -22,9 +22,9 @@ class QrGenerator {
 		}
 
 		$options = new QROptions( [
-			'outputType'  => QRCode::OUTPUT_SVG,
-			'eccLevel'    => self::ecc_constant( $ecc_level ?? (string) get_option( 'bco_vcard_ecc_level', 'M' ) ),
-			'quietZone'   => 4,
+			'outputType'   => QRCode::OUTPUT_SVG,
+			'eccLevel'     => self::ecc_constant( $ecc_level ?? (string) get_option( 'vcard_generator_ecc_level', 'M' ) ),
+			'quietZone'    => 4,
 			'addQuietzone' => true,
 			'moduleValues' => [
 				// finder
@@ -61,7 +61,7 @@ class QrGenerator {
 
 		$options = new QROptions( [
 			'outputType'   => QRCode::OUTPUT_IMAGE_PNG,
-			'eccLevel'     => self::ecc_constant( $ecc_level ?? (string) get_option( 'bco_vcard_ecc_level', 'M' ) ),
+			'eccLevel'     => self::ecc_constant( $ecc_level ?? (string) get_option( 'vcard_generator_ecc_level', 'M' ) ),
 			'quietZone'    => 4,
 			'addQuietzone' => true,
 			'scale'        => 10, // 10px per module → ~100 modules × 10 = 1000px; oversized and cropped by ImageCreate at 1024.

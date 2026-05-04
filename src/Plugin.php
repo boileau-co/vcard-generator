@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -18,7 +18,7 @@ class Plugin {
 	}
 
 	public function init(): void {
-		load_plugin_textdomain( 'bco-vcard', false, dirname( plugin_basename( BCO_VCARD_FILE ) ) . '/languages' );
+		load_plugin_textdomain( 'vcard-generator', false, dirname( plugin_basename( VCARD_GENERATOR_FILE ) ) . '/languages' );
 
 		PostType::register();
 		Fields::register();

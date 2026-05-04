@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class PostType {
 
-	const SLUG = 'bco_vcard';
+	const SLUG = 'vcard_generator';
 
 	public static function register(): void {
 		add_action( 'init', [ self::class, 'register_cpt' ] );
@@ -18,18 +18,18 @@ class PostType {
 
 	public static function register_cpt(): void {
 		$labels = [
-			'name'               => __( 'vCards', 'bco-vcard' ),
-			'singular_name'      => __( 'vCard', 'bco-vcard' ),
-			'add_new'            => __( 'Add New', 'bco-vcard' ),
-			'add_new_item'       => __( 'Add New vCard', 'bco-vcard' ),
-			'edit_item'          => __( 'Edit vCard', 'bco-vcard' ),
-			'new_item'           => __( 'New vCard', 'bco-vcard' ),
-			'view_item'          => __( 'View vCard', 'bco-vcard' ),
-			'search_items'       => __( 'Search vCards', 'bco-vcard' ),
-			'not_found'          => __( 'No vCards found.', 'bco-vcard' ),
-			'not_found_in_trash' => __( 'No vCards found in trash.', 'bco-vcard' ),
-			'all_items'          => __( 'All vCards', 'bco-vcard' ),
-			'menu_name'          => __( 'vCards', 'bco-vcard' ),
+			'name'               => __( 'vCards', 'vcard-generator' ),
+			'singular_name'      => __( 'vCard', 'vcard-generator' ),
+			'add_new'            => __( 'Add New', 'vcard-generator' ),
+			'add_new_item'       => __( 'Add New vCard', 'vcard-generator' ),
+			'edit_item'          => __( 'Edit vCard', 'vcard-generator' ),
+			'new_item'           => __( 'New vCard', 'vcard-generator' ),
+			'view_item'          => __( 'View vCard', 'vcard-generator' ),
+			'search_items'       => __( 'Search vCards', 'vcard-generator' ),
+			'not_found'          => __( 'No vCards found.', 'vcard-generator' ),
+			'not_found_in_trash' => __( 'No vCards found in trash.', 'vcard-generator' ),
+			'all_items'          => __( 'All vCards', 'vcard-generator' ),
+			'menu_name'          => __( 'vCards', 'vcard-generator' ),
 		];
 
 		register_post_type( self::SLUG, [
@@ -51,8 +51,8 @@ class PostType {
 
 	public static function add_top_level_menu(): void {
 		add_menu_page(
-			__( 'vCards', 'bco-vcard' ),
-			__( 'vCards', 'bco-vcard' ),
+			__( 'vCards', 'vcard-generator' ),
+			__( 'vCards', 'vcard-generator' ),
 			'edit_posts',
 			'edit.php?post_type=' . self::SLUG,
 			'',
@@ -72,8 +72,8 @@ class PostType {
 			return;
 		}
 
-		$first = trim( (string) get_post_meta( $post_id, '_bco_vcard_first_name', true ) );
-		$last  = trim( (string) get_post_meta( $post_id, '_bco_vcard_last_name', true ) );
+		$first = trim( (string) get_post_meta( $post_id, '_vcard_generator_first_name', true ) );
+		$last  = trim( (string) get_post_meta( $post_id, '_vcard_generator_last_name', true ) );
 
 		if ( '' === $first && '' === $last ) {
 			return;

@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Rewrite {
 
-	const QUERY_VAR = 'bco_vcard_slug';
+	const QUERY_VAR = 'vcard_generator_slug';
 
 	public static function register(): void {
 		add_action( 'init', [ self::class, 'add_rewrite_rule' ] );
@@ -17,7 +17,7 @@ class Rewrite {
 	}
 
 	public static function add_rewrite_rule(): void {
-		$base = get_option( 'bco_vcard_slug_base', 'v' );
+		$base = get_option( 'vcard_generator_slug_base', 'v' );
 		add_rewrite_rule(
 			'^' . preg_quote( $base, '/' ) . '/([^/]+)/?$',
 			'index.php?' . self::QUERY_VAR . '=$matches[1]',
@@ -87,7 +87,7 @@ class Rewrite {
 		$post = $posts[0];
 
 		// Check active toggle (defaults to on for published posts without the meta).
-		$active = get_post_meta( $post->ID, '_bco_vcard_active', true );
+		$active = get_post_meta( $post->ID, '_vcard_generator_active', true );
 		if ( $active === '0' ) {
 			return null;
 		}

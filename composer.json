@@ -1,6 +1,6 @@
 {
-    "name": "bco/vcard",
-    "description": "BCO vCard WordPress plugin — employee contact records as downloadable .vcf files",
+    "name": "boileau-co/vcard-generator",
+    "description": "vCard Generator WordPress plugin — employee contact records as downloadable .vcf files",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "require": {

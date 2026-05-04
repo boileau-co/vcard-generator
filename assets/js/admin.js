@@ -1,5 +1,5 @@
-/* BCO vCard admin JS */
-/* global bcovCardAdmin, jQuery */
+/* vCard Generator admin JS */
+/* global vcardGeneratorAdmin, jQuery */
 (function ($) {
     'use strict';
 
@@ -23,7 +23,7 @@
         try { ok = document.execCommand('copy'); } catch (e) {}
         $temp.remove();
         if (ok) { showCopied($btn); }
-        else { alert(bcovCardAdmin.copyFail); }
+        else { alert(vcardGeneratorAdmin.copyFail); }
     }
 
     function showCopied($btn) {
@@ -34,7 +34,7 @@
         }, 1500);
     }
 
-    $(document).on('click', '.bco-copy-url', function (e) {
+    $(document).on('click', '.vcard-generator-copy-url', function (e) {
         e.preventDefault();
         var url = $(this).data('url');
         copyUrl(url, $(this));
@@ -46,20 +46,20 @@
     function buildModal() {
         if ($modal) { return; }
         $modal = $([
-            '<div id="bco-qr-modal" role="dialog" aria-modal="true" aria-labelledby="bco-qr-modal-title">',
-            '  <div id="bco-qr-modal-inner">',
-            '    <button id="bco-qr-modal-close" type="button" aria-label="Close">&times;</button>',
-            '    <p id="bco-qr-modal-title"></p>',
-            '    <img id="bco-qr-modal-img" src="" alt="QR Code">',
-            '    <div id="bco-qr-modal-actions"></div>',
+            '<div id="vcard-generator-qr-modal" role="dialog" aria-modal="true" aria-labelledby="vcard-generator-qr-modal-title">',
+            '  <div id="vcard-generator-qr-modal-inner">',
+            '    <button id="vcard-generator-qr-modal-close" type="button" aria-label="Close">&times;</button>',
+            '    <p id="vcard-generator-qr-modal-title"></p>',
+            '    <img id="vcard-generator-qr-modal-img" src="" alt="QR Code">',
+            '    <div id="vcard-generator-qr-modal-actions"></div>',
             '  </div>',
             '</div>',
         ].join('')).appendTo('body');
 
         $modal.on('click', function (e) {
-            if ($(e.target).is('#bco-qr-modal')) { closeModal(); }
+            if ($(e.target).is('#vcard-generator-qr-modal')) { closeModal(); }
         });
-        $('#bco-qr-modal-close').on('click', closeModal);
+        $('#vcard-generator-qr-modal-close').on('click', closeModal);
         $(document).on('keyup', function (e) {
             if (e.key === 'Escape') { closeModal(); }
         });
@@ -67,36 +67,36 @@
 
     function openModal(postId, url, title) {
         buildModal();
-        $('#bco-qr-modal-title').text(title || 'QR Code');
+        $('#vcard-generator-qr-modal-title').text(title || 'QR Code');
 
         var nonce = '';
         // Nonces are embedded via data attributes added by PHP in the list table.
         var $btn = $('[data-post-id="' + postId + '"]');
         nonce = $btn.data('nonce') || '';
 
-        var svgUrl  = bcovCardAdmin.ajaxUrl + '?action=bco_vcard_qr_svg&post_id=' + postId + '&_wpnonce=' + nonce;
-        var pngUrl  = bcovCardAdmin.ajaxUrl + '?action=bco_vcard_qr_png&post_id=' + postId + '&_wpnonce=' + nonce;
-        var slug    = $btn.data('slug') || 'qr';
+        var svgUrl = vcardGeneratorAdmin.ajaxUrl + '?action=vcard_generator_qr_svg&post_id=' + postId + '&_wpnonce=' + nonce;
+        var pngUrl = vcardGeneratorAdmin.ajaxUrl + '?action=vcard_generator_qr_png&post_id=' + postId + '&_wpnonce=' + nonce;
+        var slug   = $btn.data('slug') || 'qr';
 
-        $('#bco-qr-modal-img').attr('src', svgUrl);
-        $('#bco-qr-modal-actions').html(
+        $('#vcard-generator-qr-modal-img').attr('src', svgUrl);
+        $('#vcard-generator-qr-modal-actions').html(
             '<a href="' + svgUrl + '" class="button button-primary" download="qr-' + slug + '.svg">Download SVG</a>' +
             '<a href="' + pngUrl + '" class="button" download="qr-' + slug + '.png">Download PNG</a>' +
-            '<button type="button" class="button bco-copy-url" data-url="' + url + '">Copy URL</button>'
+            '<button type="button" class="button vcard-generator-copy-url" data-url="' + url + '">Copy URL</button>'
         );
         $modal.addClass('is-open');
-        $('#bco-qr-modal-close').trigger('focus');
+        $('#vcard-generator-qr-modal-close').trigger('focus');
     }
 
     function closeModal() {
         if ($modal) { $modal.removeClass('is-open'); }
     }
 
-    $(document).on('click', '.bco-qr-preview', function (e) {
+    $(document).on('click', '.vcard-generator-qr-preview', function (e) {
         e.preventDefault();
         var postId = $(this).data('post-id');
         var url    = $(this).data('url');
-        var title  = $(this).closest('tr').find('.bco_name a').text() || 'QR Code';
+        var title  = $(this).closest('tr').find('.vcg_name a').text() || 'QR Code';
         openModal(postId, url, title);
     });
 

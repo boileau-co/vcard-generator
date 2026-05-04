@@ -1,22 +1,22 @@
-/* BCO vCard admin styles */
+/* vCard Generator admin styles */
 
 /* --- List table --- */
-.column-bco_name  { width: 16%; }
-.column-bco_title { width: 14%; }
-.column-bco_url   { width: 18%; }
-.column-bco_qr    { width: 40px; text-align: center; }
-.column-bco_status { width: 80px; text-align: center; }
-.column-bco_scans  { width: 60px; text-align: right; }
-.column-bco_last_scan { width: 100px; }
+.column-vcg_name      { width: 16%; }
+.column-vcg_title     { width: 14%; }
+.column-vcg_url       { width: 18%; }
+.column-vcg_qr        { width: 40px; text-align: center; }
+.column-vcg_status    { width: 80px; text-align: center; }
+.column-vcg_scans     { width: 60px; text-align: right; }
+.column-vcg_last_scan { width: 100px; }
 
-.bco-url-wrap {
+.vcard-generator-url-wrap {
     display: flex;
     align-items: center;
     gap: 4px;
     white-space: nowrap;
 }
 
-.bco-copy-url {
+.vcard-generator-copy-url {
     cursor: pointer;
     color: #72777c;
     text-decoration: none;
@@ -26,31 +26,31 @@
     display: inline-flex;
     align-items: center;
 }
-.bco-copy-url:hover {
+.vcard-generator-copy-url:hover {
     color: #0073aa;
 }
-.bco-copy-url .dashicons {
+.vcard-generator-copy-url .dashicons {
     font-size: 16px;
     width: 16px;
     height: 16px;
 }
 
-.bco-qr-preview {
+.vcard-generator-qr-preview {
     cursor: pointer;
     color: #72777c;
     background: none;
     border: none;
     padding: 0;
 }
-.bco-qr-preview:hover { color: #0073aa; }
-.bco-qr-preview .dashicons {
+.vcard-generator-qr-preview:hover { color: #0073aa; }
+.vcard-generator-qr-preview .dashicons {
     font-size: 18px;
     width: 18px;
     height: 18px;
 }
 
 /* Status badges */
-.bco-badge {
+.vcard-generator-badge {
     display: inline-block;
     padding: 2px 8px;
     border-radius: 3px;
@@ -59,17 +59,17 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
 }
-.bco-badge--active {
+.vcard-generator-badge--active {
     background: #d4edda;
     color: #155724;
 }
-.bco-badge--inactive {
+.vcard-generator-badge--inactive {
     background: #f8d7da;
     color: #721c24;
 }
 
 /* --- QR modal --- */
-#bco-qr-modal {
+#vcard-generator-qr-modal {
     display: none;
     position: fixed;
     inset: 0;
@@ -78,10 +78,10 @@
     align-items: center;
     justify-content: center;
 }
-#bco-qr-modal.is-open {
+#vcard-generator-qr-modal.is-open {
     display: flex;
 }
-#bco-qr-modal-inner {
+#vcard-generator-qr-modal-inner {
     background: #fff;
     border-radius: 4px;
     padding: 24px;
@@ -90,25 +90,25 @@
     box-shadow: 0 4px 24px rgba(0,0,0,.3);
     position: relative;
 }
-#bco-qr-modal img {
+#vcard-generator-qr-modal img {
     width: 100%;
     height: auto;
     display: block;
     background: #fff;
     border: 1px solid #dcdcde;
 }
-#bco-qr-modal-title {
+#vcard-generator-qr-modal-title {
     font-size: 15px;
     font-weight: 600;
     margin: 0 0 12px;
 }
-#bco-qr-modal-actions {
+#vcard-generator-qr-modal-actions {
     margin-top: 12px;
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
 }
-#bco-qr-modal-close {
+#vcard-generator-qr-modal-close {
     position: absolute;
     top: 10px;
     right: 12px;
@@ -119,9 +119,9 @@
     line-height: 1;
     color: #72777c;
 }
-#bco-qr-modal-close:hover { color: #1d2327; }
+#vcard-generator-qr-modal-close:hover { color: #1d2327; }
 
 /* --- Edit screen QR box --- */
-.bco-qr-box img {
+.vcard-generator-qr-box img {
     border: 1px solid #dcdcde;
 }

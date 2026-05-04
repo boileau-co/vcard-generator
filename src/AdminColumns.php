@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,28 +19,28 @@ class AdminColumns {
 		add_action( 'add_meta_boxes', [ self::class, 'add_qr_meta_box' ] );
 
 		// AJAX handlers for QR downloads.
-		add_action( 'wp_ajax_bco_vcard_qr_svg', [ self::class, 'ajax_qr_svg' ] );
-		add_action( 'wp_ajax_bco_vcard_qr_png', [ self::class, 'ajax_qr_png' ] );
+		add_action( 'wp_ajax_vcard_generator_qr_svg', [ self::class, 'ajax_qr_svg' ] );
+		add_action( 'wp_ajax_vcard_generator_qr_png', [ self::class, 'ajax_qr_png' ] );
 	}
 
 	public static function columns( array $columns ): array {
-		$tracking = (bool) get_option( 'bco_vcard_scan_tracking', true );
+		$tracking = (bool) get_option( 'vcard_generator_scan_tracking', true );
 
 		$new = [
-			'cb'        => $columns['cb'] ?? '<input type="checkbox">',
-			'bco_name'  => __( 'Name', 'bco-vcard' ),
-			'bco_title' => __( 'Title', 'bco-vcard' ),
-			'bco_url'   => __( 'URL', 'bco-vcard' ),
-			'bco_qr'    => __( 'QR', 'bco-vcard' ),
-			'bco_status' => __( 'Status', 'bco-vcard' ),
+			'cb'                    => $columns['cb'] ?? '<input type="checkbox">',
+			'vcg_name'              => __( 'Name', 'vcard-generator' ),
+			'vcg_title'             => __( 'Title', 'vcard-generator' ),
+			'vcg_url'               => __( 'URL', 'vcard-generator' ),
+			'vcg_qr'                => __( 'QR', 'vcard-generator' ),
+			'vcg_status'            => __( 'Status', 'vcard-generator' ),
 		];
 
 		if ( $tracking ) {
-			$new['bco_scans']      = __( 'Scans', 'bco-vcard' );
-			$new['bco_last_scan']  = __( 'Last Scan', 'bco-vcard' );
+			$new['vcg_scans']     = __( 'Scans', 'vcard-generator' );
+			$new['vcg_last_scan'] = __( 'Last Scan', 'vcard-generator' );
 		}
 
-		$new['date'] = $columns['date'] ?? __( 'Date', 'bco-vcard' );
+		$new['date'] = $columns['date'] ?? __( 'Date', 'vcard-generator' );
 
 		return $new;
 	}
@@ -49,58 +49,58 @@ class AdminColumns {
 		$post = get_post( $post_id );
 
 		switch ( $column ) {
-			case 'bco_name':
+			case 'vcg_name':
 				echo '<strong><a href="' . esc_url( get_edit_post_link( $post_id ) ) . '">' . esc_html( $post->post_title ) . '</a></strong>';
 				break;
 
-			case 'bco_title':
-				echo esc_html( (string) get_post_meta( $post_id, '_bco_vcard_job_title', true ) );
+			case 'vcg_title':
+				echo esc_html( (string) get_post_meta( $post_id, '_vcard_generator_job_title', true ) );
 				break;
 
-			case 'bco_url':
-				$slug = $post->post_name;
-				$url  = Helpers::vcard_url( $slug );
-				$display = '/' . get_option( 'bco_vcard_slug_base', 'v' ) . '/' . esc_html( $slug );
-				echo '<span class="bco-url-wrap">';
+			case 'vcg_url':
+				$slug    = $post->post_name;
+				$url     = Helpers::vcard_url( $slug );
+				$display = '/' . get_option( 'vcard_generator_slug_base', 'v' ) . '/' . esc_html( $slug );
+				echo '<span class="vcard-generator-url-wrap">';
 				echo '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener">' . esc_html( $display ) . '</a> ';
-				echo '<button type="button" class="bco-copy-url button-link" data-url="' . esc_attr( $url ) . '" title="' . esc_attr__( 'Copy URL', 'bco-vcard' ) . '">';
+				echo '<button type="button" class="vcard-generator-copy-url button-link" data-url="' . esc_attr( $url ) . '" title="' . esc_attr__( 'Copy URL', 'vcard-generator' ) . '">';
 				echo '<span class="dashicons dashicons-clipboard"></span>';
 				echo '</button>';
 				echo '</span>';
 				break;
 
-			case 'bco_qr':
+			case 'vcg_qr':
 				$url   = Helpers::vcard_url( $post->post_name );
-				$nonce = wp_create_nonce( 'bco_qr_download_' . $post_id );
-				echo '<button type="button" class="bco-qr-preview button-link"'
+				$nonce = wp_create_nonce( 'vcard_generator_qr_download_' . $post_id );
+				echo '<button type="button" class="vcard-generator-qr-preview button-link"'
 					. ' data-post-id="' . esc_attr( (string) $post_id ) . '"'
 					. ' data-url="' . esc_attr( $url ) . '"'
 					. ' data-nonce="' . esc_attr( $nonce ) . '"'
 					. ' data-slug="' . esc_attr( $post->post_name ) . '"'
-					. ' title="' . esc_attr__( 'View QR Code', 'bco-vcard' ) . '">';
+					. ' title="' . esc_attr__( 'View QR Code', 'vcard-generator' ) . '">';
 				echo '<span class="dashicons dashicons-qrcode"></span>';
 				echo '</button>';
 				break;
 
-			case 'bco_status':
-				$active = get_post_meta( $post_id, '_bco_vcard_active', true );
+			case 'vcg_status':
+				$active    = get_post_meta( $post_id, '_vcard_generator_active', true );
 				$is_active = $active !== '0';
 				if ( $is_active ) {
-					echo '<span class="bco-badge bco-badge--active">' . esc_html__( 'Active', 'bco-vcard' ) . '</span>';
+					echo '<span class="vcard-generator-badge vcard-generator-badge--active">' . esc_html__( 'Active', 'vcard-generator' ) . '</span>';
 				} else {
-					echo '<span class="bco-badge bco-badge--inactive">' . esc_html__( 'Inactive', 'bco-vcard' ) . '</span>';
+					echo '<span class="vcard-generator-badge vcard-generator-badge--inactive">' . esc_html__( 'Inactive', 'vcard-generator' ) . '</span>';
 				}
 				break;
 
-			case 'bco_scans':
-				echo esc_html( (string) (int) get_post_meta( $post_id, '_bco_vcard_scan_count', true ) );
+			case 'vcg_scans':
+				echo esc_html( (string) (int) get_post_meta( $post_id, '_vcard_generator_scan_count', true ) );
 				break;
 
-			case 'bco_last_scan':
-				$ts = get_post_meta( $post_id, '_bco_vcard_last_scanned', true );
+			case 'vcg_last_scan':
+				$ts = get_post_meta( $post_id, '_vcard_generator_last_scanned', true );
 				if ( $ts ) {
 					$time = strtotime( $ts );
-					echo esc_html( human_time_diff( $time, time() ) . ' ' . __( 'ago', 'bco-vcard' ) );
+					echo esc_html( human_time_diff( $time, time() ) . ' ' . __( 'ago', 'vcard-generator' ) );
 				} else {
 					echo '—';
 				}
@@ -109,7 +109,7 @@ class AdminColumns {
 	}
 
 	public static function sortable_columns( array $columns ): array {
-		$columns['bco_scans'] = 'bco_scans';
+		$columns['vcg_scans'] = 'vcg_scans';
 		return $columns;
 	}
 
@@ -117,17 +117,17 @@ class AdminColumns {
 		if ( ! is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
-		if ( 'bco_scans' !== $query->get( 'orderby' ) ) {
+		if ( 'vcg_scans' !== $query->get( 'orderby' ) ) {
 			return;
 		}
-		$query->set( 'meta_key', '_bco_vcard_scan_count' );
+		$query->set( 'meta_key', '_vcard_generator_scan_count' );
 		$query->set( 'orderby', 'meta_value_num' );
 	}
 
 	public static function add_qr_meta_box(): void {
 		add_meta_box(
-			'bco-vcard-qr',
-			__( 'QR Code', 'bco-vcard' ),
+			'vcard-generator-qr',
+			__( 'QR Code', 'vcard-generator' ),
 			[ self::class, 'render_qr_meta_box' ],
 			PostType::SLUG,
 			'side',
@@ -137,33 +137,33 @@ class AdminColumns {
 
 	public static function render_qr_meta_box( \WP_Post $post ): void {
 		if ( 'auto-draft' === $post->post_status || '' === $post->post_name ) {
-			echo '<p class="description">' . esc_html__( 'Save the vCard first to generate a QR code.', 'bco-vcard' ) . '</p>';
+			echo '<p class="description">' . esc_html__( 'Save the vCard first to generate a QR code.', 'vcard-generator' ) . '</p>';
 			return;
 		}
 
 		$url     = Helpers::vcard_url( $post->post_name );
 		$svg_uri = QrGenerator::svg_data_uri( $url );
 		?>
-		<div class="bco-qr-box">
+		<div class="vcard-generator-qr-box">
 			<?php if ( $svg_uri ) : ?>
-				<img src="<?php echo esc_attr( $svg_uri ); ?>" alt="<?php esc_attr_e( 'QR Code', 'bco-vcard' ); ?>" style="width:100%;height:auto;display:block;background:#fff;">
+				<img src="<?php echo esc_attr( $svg_uri ); ?>" alt="<?php esc_attr_e( 'QR Code', 'vcard-generator' ); ?>" style="width:100%;height:auto;display:block;background:#fff;">
 			<?php else : ?>
-				<p class="description"><?php esc_html_e( 'QR library not available. Run composer install.', 'bco-vcard' ); ?></p>
+				<p class="description"><?php esc_html_e( 'QR library not available. Run composer install.', 'vcard-generator' ); ?></p>
 			<?php endif; ?>
 
 			<p style="margin-top:8px;">
-				<a href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=bco_vcard_qr_svg&post_id=' . $post->ID . '&_wpnonce=' . wp_create_nonce( 'bco_qr_download_' . $post->ID ) ) ); ?>" class="button" download="qr-<?php echo esc_attr( $post->post_name ); ?>.svg">
-					<?php esc_html_e( 'Download SVG', 'bco-vcard' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=vcard_generator_qr_svg&post_id=' . $post->ID . '&_wpnonce=' . wp_create_nonce( 'vcard_generator_qr_download_' . $post->ID ) ) ); ?>" class="button" download="qr-<?php echo esc_attr( $post->post_name ); ?>.svg">
+					<?php esc_html_e( 'Download SVG', 'vcard-generator' ); ?>
 				</a>
-				<a href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=bco_vcard_qr_png&post_id=' . $post->ID . '&_wpnonce=' . wp_create_nonce( 'bco_qr_download_' . $post->ID ) ) ); ?>" class="button" download="qr-<?php echo esc_attr( $post->post_name ); ?>.png">
-					<?php esc_html_e( 'Download PNG', 'bco-vcard' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'admin-ajax.php?action=vcard_generator_qr_png&post_id=' . $post->ID . '&_wpnonce=' . wp_create_nonce( 'vcard_generator_qr_download_' . $post->ID ) ) ); ?>" class="button" download="qr-<?php echo esc_attr( $post->post_name ); ?>.png">
+					<?php esc_html_e( 'Download PNG', 'vcard-generator' ); ?>
 				</a>
-				<button type="button" class="button bco-copy-url" data-url="<?php echo esc_attr( $url ); ?>">
-					<?php esc_html_e( 'Copy URL', 'bco-vcard' ); ?>
+				<button type="button" class="button vcard-generator-copy-url" data-url="<?php echo esc_attr( $url ); ?>">
+					<?php esc_html_e( 'Copy URL', 'vcard-generator' ); ?>
 				</button>
 			</p>
 			<p class="description" style="margin-top:8px;font-size:11px;">
-				<?php esc_html_e( 'Print specs: minimum 0.8 in (20 mm). Recommended: 1 in (25 mm) for business cards. Do not crop the white border (quiet zone). Use SVG for any print application.', 'bco-vcard' ); ?>
+				<?php esc_html_e( 'Print specs: minimum 0.8 in (20 mm). Recommended: 1 in (25 mm) for business cards. Do not crop the white border (quiet zone). Use SVG for any print application.', 'vcard-generator' ); ?>
 			</p>
 		</div>
 		<?php
@@ -171,7 +171,7 @@ class AdminColumns {
 
 	public static function ajax_qr_svg(): void {
 		$post_id = (int) ( $_GET['post_id'] ?? 0 );
-		if ( ! $post_id || ! check_ajax_referer( 'bco_qr_download_' . $post_id, '_wpnonce', false ) ) {
+		if ( ! $post_id || ! check_ajax_referer( 'vcard_generator_qr_download_' . $post_id, '_wpnonce', false ) ) {
 			wp_die( '', '', 403 );
 		}
 		$post = get_post( $post_id );
@@ -189,7 +189,7 @@ class AdminColumns {
 
 	public static function ajax_qr_png(): void {
 		$post_id = (int) ( $_GET['post_id'] ?? 0 );
-		if ( ! $post_id || ! check_ajax_referer( 'bco_qr_download_' . $post_id, '_wpnonce', false ) ) {
+		if ( ! $post_id || ! check_ajax_referer( 'vcard_generator_qr_download_' . $post_id, '_wpnonce', false ) ) {
 			wp_die( '', '', 403 );
 		}
 		$post = get_post( $post_id );
@@ -215,24 +215,24 @@ class AdminColumns {
 		}
 
 		wp_enqueue_style(
-			'bco-vcard-admin',
-			BCO_VCARD_URL . 'assets/css/admin.css',
+			'vcard-generator-admin',
+			VCARD_GENERATOR_URL . 'assets/css/admin.css',
 			[],
-			BCO_VCARD_VERSION
+			VCARD_GENERATOR_VERSION
 		);
 
 		wp_enqueue_script(
-			'bco-vcard-admin',
-			BCO_VCARD_URL . 'assets/js/admin.js',
+			'vcard-generator-admin',
+			VCARD_GENERATOR_URL . 'assets/js/admin.js',
 			[ 'jquery' ],
-			BCO_VCARD_VERSION,
+			VCARD_GENERATOR_VERSION,
 			true
 		);
 
-		wp_localize_script( 'bco-vcard-admin', 'bcovCardAdmin', [
-			'copied'    => __( 'Copied!', 'bco-vcard' ),
-			'copyFail'  => __( 'Copy failed', 'bco-vcard' ),
-			'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
+		wp_localize_script( 'vcard-generator-admin', 'vcardGeneratorAdmin', [
+			'copied'   => __( 'Copied!', 'vcard-generator' ),
+			'copyFail' => __( 'Copy failed', 'vcard-generator' ),
+			'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
 		] );
 	}
 }

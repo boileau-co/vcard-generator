@@ -8,7 +8,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-$delete_data = (bool) get_option( 'bco_vcard_delete_on_uninstall', false );
+$delete_data = (bool) get_option( 'vcard_generator_delete_on_uninstall', false );
 
 if ( ! $delete_data ) {
 	return;
@@ -16,9 +16,9 @@ if ( ! $delete_data ) {
 
 global $wpdb;
 
-// Delete all bco_vcard posts and their meta.
+// Delete all vcard_generator posts and their meta.
 $post_ids = $wpdb->get_col(
-	$wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", 'bco_vcard' )
+	$wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s", 'vcard_generator' )
 );
 
 foreach ( $post_ids as $post_id ) {
@@ -27,10 +27,10 @@ foreach ( $post_ids as $post_id ) {
 
 // Delete all plugin options.
 $wpdb->query(
-	"DELETE FROM {$wpdb->options} WHERE option_name LIKE 'bco\_vcard\_%'"
+	"DELETE FROM {$wpdb->options} WHERE option_name LIKE 'vcard\_generator\_%'"
 );
 
 // Clean up any orphaned postmeta (posts already deleted above, but just in case).
 $wpdb->query(
-	"DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '\_bco\_vcard\_%'"
+	"DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE '\_vcard\_generator\_%'"
 );

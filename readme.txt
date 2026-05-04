@@ -1,4 +1,4 @@
-=== BCO vCard ===
+=== vCard Generator ===
 Contributors: boileaucreativeoperations
 Tags: vcard, contact, qr code, business card, vcf
 Requires at least: 6.4
@@ -12,7 +12,7 @@ Manage employee contact records and serve them as downloadable .vcf files at cle
 
 == Description ==
 
-BCO vCard lets you manage employee contact records in WordPress and serve them as downloadable vCard (.vcf) files at short, clean URLs designed for print QR codes on business cards.
+vCard Generator lets you manage employee contact records in WordPress and serve them as downloadable vCard (.vcf) files at short, clean URLs designed for print QR codes on business cards.
 
 **Features:**
 
@@ -29,7 +29,7 @@ BCO vCard lets you manage employee contact records in WordPress and serve them a
 
 == Installation ==
 
-1. Upload the `bco-vcard` folder to `/wp-content/plugins/`.
+1. Upload the `vcard-generator` folder to `/wp-content/plugins/`.
 2. Run `composer install --no-dev` inside the plugin folder (requires PHP 8.1+ and Composer).
 3. Activate the plugin in **Plugins → Installed Plugins**.
 4. Go to **vCards → Settings** and configure your organization defaults.

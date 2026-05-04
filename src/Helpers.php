@@ -1,6 +1,6 @@
 <?php
 
-namespace BCO\vCard;
+namespace VCardGenerator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,7 +55,7 @@ class Helpers {
 	 * Build a full public vCard URL for a given post slug.
 	 */
 	public static function vcard_url( string $slug ): string {
-		$base = get_option( 'bco_vcard_slug_base', 'v' );
+		$base = get_option( 'vcard_generator_slug_base', 'v' );
 		return trailingslashit( home_url() ) . trailingslashit( $base ) . $slug;
 	}
 }
